@@ -1,11 +1,17 @@
+//Imports
 const knex = require('../db/connection')
+
+//Set global variable for the main table we're working with. 
 const table = "reviews";
 
+//This returns the "Reviews" table. 
 function list(){
     return knex(`${table}`)
     .select('*')
 }
 
+//This function appends the critic associated with the review to each review.
+//Returns review{...critic{...}}
 async function getCriticsForReviews(){
     //Retrieve the Reviews and Critics tables:
     let reviews = await list();
@@ -25,15 +31,16 @@ async function getCriticsForReviews(){
 //Function for ('/:movieId/reviews')
 async function getMovieReviews(movieId){
 
-    //Run the middleware function that attaches the critics and reviews as required:
+    //Run the function that attaches the critics to reviews as required:
     let reviews = await getCriticsForReviews();
 
-    //filter through and return only the reviews that match the given movie ID.
+    //Filter through and return only the reviews that match the given movie ID.
     let matchingReviews = reviews.filter((review) => review.movie_id === Number(movieId) )
 
     return matchingReviews
 }
 
+//Exports 
 module.exports = {
     list,
     getCriticsForReviews,

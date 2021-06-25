@@ -1,4 +1,7 @@
+//Imports
 const knex = require("../db/connection");
+
+//Global variable for main table we're working with. 
 const table = "movies";
 
 
@@ -9,7 +12,8 @@ function list(){
     return knex(table).select("*")
 }
 
-//Joins with the "Movies_Theaters" table to return a list of movies that are showing in theaters.
+//Joins with the "Movies_Theaters" table 
+//to return a list of movies that are showing in theaters.
 function listShowing(){
     return knex(`${table} as m`)
     .join("movies_theaters as mt", "m.movie_id", "mt.movie_id")
@@ -21,12 +25,16 @@ function listShowing(){
 //--------------------
 
 //FUNCTIONS FOR ('/:movieId')
+
+//Returns movies that match the ID given. 
 function read(movieId){
     return knex(table)
     .select("*")
     .where({movie_id: movieId})
 }
 
+//Joins with the "Movies_Theaters" and "Theaters" tables 
+//to return a list of theaters that are showing the given movie ID. 
 function getMovieTheaters(movieId){
     return knex(`${table} as m`)
     .join("movies_theaters as mt", "m.movie_id", "mt.movie_id")
@@ -36,8 +44,7 @@ function getMovieTheaters(movieId){
     
 }
 
-
-
+//Exports
 module.exports = {
     list,
     listShowing,
