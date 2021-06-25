@@ -4,18 +4,26 @@ const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 //MIDDLEWARE
 async function movieExists(req, res, next) {
     let {movieId} = req.params;
-    console.log(movieId);
+    let data = await service.read(movieId);
+    if (data.length){
+        res.locals.movie = data
+        return next();
+    }
+    return next({
+        status: 404,
+        message: "Movie cannot be found."
+    })
+    
     //check if movieId exists in the database
 }
 
-//Root route functions
+//Root route functions ('/')
 async function list(req, res) {
     
     let {is_showing} = req.query
 
     if(is_showing === 'true'){
         const data = await service.listShowing()
-        console.log(data.length)
         return res.json({data})
     }
 
@@ -24,15 +32,21 @@ async function list(req, res) {
   }
 //----------------------
 
-//('/:movieId') route functions 
+//('/:movieId')
 async function read(req, res, next){
-    const data = await service.read();
-
+    let data = res.locals.movie
+    res.json({data: data[0]})
 }
 
-
-  
+//('/:movieId/theaters')
+async function getMovieTheaters(req, res, next){
+    let {movieId} = req.params
+    let data = await service.getMovieTheaters(movieId)
+    res.json({data: data})
+}
+ 
 module.exports = {
     list: asyncErrorBoundary(list),
     read: [asyncErrorBoundary(movieExists), asyncErrorBoundary(read)],
+    getMovieTheaters: [asyncErrorBoundary(movieExists), asyncErrorBoundary(getMovieTheaters)]
   };
