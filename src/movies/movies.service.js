@@ -1,4 +1,3 @@
-const reduceProperties = require("../utils/reduce-properties");
 const knex = require("../db/connection");
 const table = "movies";
 
@@ -37,17 +36,6 @@ function getMovieTheaters(movieId){
     
 }
 
-let addCritic = reduceProperties({
-    "critic": 
-    ["critics.critic_id", "critics.preferred_name",]
-}, {})
-
-function getMovieReviews(movieId){
-    return knex(`${table} as m`)
-    .join("reviews as r", "m.movie_id", "r.movie_id")
-    .join("critics as c", "r.critic_id", "c.critic_id")
-    .then(addCritic)
-}
 
 
 module.exports = {
