@@ -19,6 +19,11 @@ async function reviewExists(req, res, next) {
     next({ status: 404, message: `Review cannot be found.`});
 }
 
+const validFields = new Set([
+    "score",
+    "content"
+])
+
 function hasValidFields(req, res, next) {
     const { data = {} } = req.body;
 

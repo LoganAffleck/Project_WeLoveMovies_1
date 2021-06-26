@@ -14,10 +14,10 @@ router
     .get(controller.getMovieTheaters) 
     .all(notAllowed)
 
-//Rotue for ('/movies/:movieId')
+//Route for ('/movies/:movieId')
 //Only GET is allowed for this route.
 router
-    .route("/movies/:movieId")
+    .route("/:movieId")
     .get(controller.read) 
     .all(notAllowed)
 

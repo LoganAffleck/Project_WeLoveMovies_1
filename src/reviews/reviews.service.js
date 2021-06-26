@@ -28,6 +28,25 @@ async function getCriticsForReviews(){
     return mapCritic
 }
 
+function getCritics(critic_id){
+    return knex("critics")
+    .select("*")
+    .where({ critic_id })
+    .first()
+}
+async function waitForCritics(reviewObject){
+    const critic = await getCritics(reviewObject.critic_id)
+    const combined = {...reviewObject, critic}
+    return combined;
+}
+function readReviewCritics(review_id) {
+    return knex(table)
+    .select("*")
+    .where({ review_id })
+    .first()
+    .then((data)=> waitForCritics(data))
+}
+
 //Function for ('/:movieId/reviews')
 async function getMovieReviews(movieId){
 
@@ -41,22 +60,22 @@ async function getMovieReviews(movieId){
 }
 
 function read(review_id) {
-    return knex(tableName)
+    return knex(table)
     .select("*")
     .where({ review_id })
     .first();
 }
 
 function update(updatedReview) {
-    return knex(tableName)
-        .join("critics", `${tableName}.critic_id`, "critics.critic_id")
+    return knex(table)
+        .join("critics", `${table}.critic_id`, "critics.critic_id")
         .where({ review_id: updatedReview.review_id})
         .update(updatedReview, "*")
         .then(()=> readReviewCritics(updatedReview.review_id))
   }
 
 function destroy(review_id) {
-    return knex(tableName).where({ review_id }).del()
+    return knex(table).where({ review_id }).del()
 }
 
 //Exports 
