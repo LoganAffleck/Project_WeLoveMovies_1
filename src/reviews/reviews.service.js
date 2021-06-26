@@ -40,9 +40,31 @@ async function getMovieReviews(movieId){
     return matchingReviews
 }
 
+function read(review_id) {
+    return knex(tableName)
+    .select("*")
+    .where({ review_id })
+    .first();
+}
+
+function update(updatedReview) {
+    return knex(tableName)
+        .join("critics", `${tableName}.critic_id`, "critics.critic_id")
+        .where({ review_id: updatedReview.review_id})
+        .update(updatedReview, "*")
+        .then(()=> readReviewCritics(updatedReview.review_id))
+  }
+
+function destroy(review_id) {
+    return knex(tableName).where({ review_id }).del()
+}
+
 //Exports 
 module.exports = {
     list,
     getCriticsForReviews,
-    getMovieReviews
+    getMovieReviews,
+    read,
+    update,
+    destroy
 }

@@ -7,9 +7,9 @@ const controller = require('./reviews.controller');
 //Can GET, UPDATE, or DELETE the review given. 
 router
     .route("/:reviewId")
-    //.get(controller.read)
-    //.put(controller.update)
-    //.delete(controller.destroy)
+    .get(controller.read)
+    .put(controller.update)
+    .delete(controller.destroy)
     .all(notAllowed)
 
 //Root Router for ('/reviews')
